@@ -63,7 +63,7 @@ setInterval(() => {
 }, 5000); // El intervalo de 5000 milisegundos es igual a 5 segundos
 
 // Espera a que la página cargue antes de ejecutar este código
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Selecciona el contenedor donde se van a mostrar los testimonios de los clientes
   const customerFeedbackContainer = document.getElementById(
     "customerFeedbackContainer"
