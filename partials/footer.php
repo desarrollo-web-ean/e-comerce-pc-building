@@ -6,3 +6,8 @@
       <span class="text-xl">2024</span>
     </div>
   </footer>
+  <!-- scripts js -->
+  <?php include './php/partials/scripts.php'; ?>
+  </body>
+
+  </html>
