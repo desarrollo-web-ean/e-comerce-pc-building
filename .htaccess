@@ -1,4 +1,24 @@
 RewriteEngine On
+
+# Redirigir todas las solicitudes que no sean archivos ni directorios
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# Endpoint para listar productos
+RewriteRule ^api/products/list$ php/controllers/ProductController.php?action=list [QSA,L]
+
+# Endpoint para obtener un producto por ID
 RewriteRule ^api/products/([0-9]+)$ php/controllers/ProductController.php?action=getById&id=$1 [QSA,L]
+
+# Endpoint para crear un producto (requiere POST)
+RewriteRule ^api/products/create$ php/controllers/ProductController.php?action=create [QSA,L]
+
+# Endpoint para actualizar un producto (requiere POST)
+RewriteRule ^api/products/update$ php/controllers/ProductController.php?action=update [QSA,L]
+
+# Endpoint para eliminar un producto (requiere POST)
+RewriteRule ^api/products/delete$ php/controllers/ProductController.php?action=delete [QSA,L]
+
+# Endpoint para manejar rutas generales si es necesario
+# (Puedes usar esto como fallback para manejar acciones no especificadas)
+RewriteRule ^api/products/(.*)$ php/controllers/ProductController.php?action=$1 [QSA,L]
