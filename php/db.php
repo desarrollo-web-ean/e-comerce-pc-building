@@ -1,14 +1,14 @@
 <?php
 
-const DB_URL = 'localhost';
-const USER = 'root';
-const PASS = '';
-const DB_NAME = 'proyectophp';
+try {
+  $host = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'proyectophp';
 
-$conn = mysqli_connect(DB_URL, USER, PASS);
-
-// if (isset($conn)) {
-//   echo "conectado correctamenta a la BD";
-// } else {
-//   echo "nel prro no me pude conectar";
-// }
+  $hostDB = "mysql:host=" . $host . ";dbname=" . $dbname . ";charset=utf8";
+  $pdo = new PDO($hostDB, $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  die("Error de conexión: " . $e->getMessage());
+}
