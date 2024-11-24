@@ -7,7 +7,11 @@
     </div>
   </footer>
   <!-- scripts js -->
-  <?php include './php/partials/scripts.php'; ?>
+  <script src="./js/global.js"></script>
+  <script
+    src="https://kit.fontawesome.com/86f3aeba5f.js"
+    crossorigin="anonymous"></script>
+
   </body>
 
   </html>
