@@ -4,6 +4,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# PRODUCTOS
 # Endpoint para listar productos
 RewriteRule ^api/products/list$ php/controllers/ProductController.php?action=list [QSA,L]
 
@@ -22,3 +23,36 @@ RewriteRule ^api/products/delete$ php/controllers/ProductController.php?action=d
 # Endpoint para manejar rutas generales si es necesario
 # (Puedes usar esto como fallback para manejar acciones no especificadas)
 RewriteRule ^api/products/(.*)$ php/controllers/ProductController.php?action=$1 [QSA,L]
+
+# LOGIN Y REGISTER
+# Endpoint para iniciar sesión (requiere POST)
+RewriteRule ^api/login$ php/controllers/UserController.php?action=login [QSA,L]
+
+# Endpoint para registrarse (requiere POST)
+RewriteRule ^api/register$ php/controllers/UserController.php?action=register [QSA,L]
+
+# CARRITO DE COMPRAS
+# Endpoint para ver el carrito de compras (requiere GET)
+RewriteRule ^api/cart/view$ php/controllers/CartController.php?action=viewUserCart [QSA,L]
+
+# Endpoint para agregar un producto al carrito (requiere POST)
+RewriteRule ^api/cart/add$ php/controllers/CartController.php?action=addProductToCart [QSA,L]
+
+# Endpoint para eliminar un producto del carrito (requiere POST)
+RewriteRule ^api/cart/remove$ php/controllers/CartController.php?action=removeProductFromCart [QSA,L]
+
+# Endpoint para vaciar el carrito (requiere POST)
+RewriteRule ^api/cart/clear$ php/controllers/CartController.php?action=clearCart [QSA,L]
+
+# REVIEWS
+# Endpoint para listar reseñas de un producto (requiere POST)
+RewriteRule ^api/reviews/list$ php/controllers/ReviewController.php?action=listReviews [QSA,L]
+
+# Endpoint para agregar una reseña (requiere POST)
+RewriteRule ^api/reviews/add$ php/controllers/ReviewController.php?action=addReview [QSA,L]
+
+# Endpoint para editar una reseña (requiere POST)
+RewriteRule ^api/reviews/edit$ php/controllers/ReviewController.php?action=editReview [QSA,L]
+
+# Endpoint para eliminar una reseña (requiere POST)
+RewriteRule ^api/reviews/delete$ php/controllers/ReviewController.php?action=deleteReview [QSA,L]
