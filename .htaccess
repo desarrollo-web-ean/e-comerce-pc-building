@@ -9,7 +9,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/products/list$ php/controllers/ProductController.php?action=list [QSA,L]
 
 # Endpoint para obtener un producto por ID
-RewriteRule ^api/products/([0-9]+)$ php/controllers/ProductController.php?action=getById&id=$1 [QSA,L]
+RewriteRule ^api/products/([0-9]+)$ php/controllers/ProductController.php?action=getById&productId=$1 [QSA,L]
 
 # Endpoint para crear un producto (requiere POST)
 RewriteRule ^api/products/create$ php/controllers/ProductController.php?action=create [QSA,L]
