@@ -21,7 +21,6 @@ RewriteRule ^api/products/update$ php/controllers/ProductController.php?action=u
 RewriteRule ^api/products/delete$ php/controllers/ProductController.php?action=delete [QSA,L]
 
 # Endpoint para manejar rutas generales si es necesario
-# (Puedes usar esto como fallback para manejar acciones no especificadas)
 RewriteRule ^api/products/(.*)$ php/controllers/ProductController.php?action=$1 [QSA,L]
 
 # LOGIN Y REGISTER
@@ -56,3 +55,22 @@ RewriteRule ^api/reviews/edit$ php/controllers/ReviewController.php?action=editR
 
 # Endpoint para eliminar una reseña (requiere POST)
 RewriteRule ^api/reviews/delete$ php/controllers/ReviewController.php?action=deleteReview [QSA,L]
+
+# CATEGORÍAS
+# Endpoint para listar categorias (requiere GET)
+RewriteRule ^api/categories/list$ php/controllers/CategoryController.php?action=getCategories [QSA,L]
+
+# Endpoint para obtener una categoria (requiere GET)
+RewriteRule ^api/categories/getById$ php/controllers/CategoryController.php?action=getCategoryById [QSA,L]
+
+# Endpoint para obtener productos por una categoria (requiere GET)
+RewriteRule ^api/categories/getProductsByCategoryId$ php/controllers/CategoryController.php?action=getProductsByCategoryId [QSA,L]
+
+# Endpoint para crear una categoria (requiere POST)
+RewriteRule ^api/categories/create$ php/controllers/CategoryController.php?action=create [QSA,L]
+
+# Endpoint para actualizar una categoria (requiere PUT)
+RewriteRule ^api/categories/update$ php/controllers/CategoryController.php?action=update [QSA,L]
+
+# Endpoint para eliminar una categoria (requiere DELETE)
+RewriteRule ^api/categories/delete$ php/controllers/CategoryController.php?action=delete [QSA,L]
