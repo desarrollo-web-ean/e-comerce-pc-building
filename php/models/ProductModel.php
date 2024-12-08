@@ -39,4 +39,48 @@ class ProductModel
     $stmt = $this->db->prepare("DELETE FROM products WHERE id = ?");
     return $stmt->execute([$id]);
   }
+
+  public function asociateCategories($productId, $categoryIds)
+  {
+    try {
+      $this->db->beginTransaction();
+
+      $stmt = $this->db->prepare("DELETE FROM product_categories WHERE product_id = ?");
+      $stmt->execute([$productId]);
+
+      $stmt = $this->db->prepare("INSERT INTO product_categories (product_id, category_id	) VALUES (?, ?)");
+
+      foreach ($categoryIds as $categoryId) {
+        $stmt->execute([$productId, $categoryId]);
+      }
+
+      $this->db->commit();
+      return true;
+    } catch (PDOException $e) {
+      $this->db->rollBack();
+      return false;
+    }
+  }
+
+  public function getCategoriesByProductId($productId)
+  {
+    try {
+      $this->db->beginTransaction();
+
+      $stmt = $this->db->prepare("
+        SELECT c.id, c.name
+        FROM categories AS c
+        JOIN product_categories AS pc ON c.id = pc.category_id
+        WHERE pc.product_id = ?
+      ");
+      $stmt->execute([$productId]);
+
+      $this->db->commit();
+
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      $this->db->rollBack();
+      return false;
+    }
+  }
 }

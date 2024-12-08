@@ -20,6 +20,9 @@ RewriteRule ^api/products/update$ php/controllers/ProductController.php?action=u
 # Endpoint para eliminar un producto (requiere POST)
 RewriteRule ^api/products/delete$ php/controllers/ProductController.php?action=delete [QSA,L]
 
+# Endpoint para asociar categorías a un producto (requiere POST)
+RewriteRule ^api/products/link-categories$ php/controllers/ProductController.php?action=associateCategories [QSA,L]
+
 # Endpoint para manejar rutas generales si es necesario
 RewriteRule ^api/products/(.*)$ php/controllers/ProductController.php?action=$1 [QSA,L]
 

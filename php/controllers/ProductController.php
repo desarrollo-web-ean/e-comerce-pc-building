@@ -41,6 +41,11 @@ class ProductController
 
     if ($products) {
       http_response_code(200);
+
+      foreach ($products as &$product) {
+        $product['categories'] = $this->model->getCategoriesByProductId($product['id']);
+      }
+
       echo json_encode(["success" => true, "products" => $products]);
     } else {
       http_response_code(500);
@@ -77,7 +82,7 @@ class ProductController
       return;
     }
 
-    $data = json_decode(file_get_contents('php://input'), true);    
+    $data = json_decode(file_get_contents('php://input'), true);
     $name = $data['name'] ?? null;
     $description = $data['description'] ?? null;
     $price = $data['price'] ?? null;
@@ -109,11 +114,13 @@ class ProductController
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
+
     if (empty($data)) {
       http_response_code(400);
       echo json_encode(["success" => false, "message" => 'Datos inválidos o faltantes']);
       return;
     }
+
     $productId = $data['productId'] ?? null;
     $name = $data['name'] ?? null;
     $description = $data['description'] ?? null;
@@ -144,6 +151,7 @@ class ProductController
     if (!$this->validateJWTAndRole()) {
       return;
     }
+
     $data = json_decode(file_get_contents('php://input'), true);
     $productId = $data['productId'] ?? null;
 
@@ -161,6 +169,33 @@ class ProductController
     } else {
       http_response_code(500);
       echo json_encode(['success' => false, 'message' => 'error al eliminar el producto']);
+    }
+  }
+
+  public function asosiateCategories()
+  {
+    if (!$this->validateJWTAndRole()) {
+      return;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $productId = $data['productId'] ?? null;
+    $categoryIds = $data['categoryIds'] ?? [];
+
+    if (!$productId || !is_numeric($productId) || empty($categoryIds)) {
+      http_response_code(400);
+      echo json_encode(['success' => false, 'message' => 'ID inválido o faltante']);
+      return;
+    }
+
+    $result = $this->model->asociateCategories($productId, $categoryIds);
+
+    if ($result) {
+      http_response_code(200);
+      echo json_encode(['success' => true, 'message' => 'categorias asociadas correctamente al producto']);
+    } else {
+      http_response_code(500);
+      echo json_encode(['success' => false, 'message' => 'error al asociar categorias.']);
     }
   }
 }
@@ -183,6 +218,9 @@ switch ($action) {
     break;
   case 'delete':
     $controller->delete();
+    break;
+  case 'associateCategories':
+    $controller->asosiateCategories();
     break;
   default:
     http_response_code(404);
