@@ -38,7 +38,14 @@ class ProductController
   public function list()
   {
     $products = $this->model->getAll();
-    echo json_encode($products);
+
+    if ($products) {
+      http_response_code(200);
+      echo json_encode(["success" => true, "products" => $products]);
+    } else {
+      http_response_code(500);
+      echo json_encode(['success' => false, 'message' => 'Error al listar los productos. No se encontraron productos.']);
+    }
   }
 
   public function getById()
