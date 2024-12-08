@@ -12,6 +12,29 @@ class ProductController
     $this->model = new ProductModel($pdo);
   }
 
+  private function validateJWTAndRole()
+  {
+    // Validar JWT
+    $headers = getallheaders();
+    $token = $headers['Authorization'] ?? '';
+    $userData = verifyJWT(str_replace('Bearer ', '', $token));
+
+    if (!$token || !$userData) {
+      http_response_code(401);
+      echo json_encode(['success' => false, 'message' => 'No autorizado']);
+      return false;
+    }
+
+    // Verificar rol
+    if ($userData['role'] !== 'admin') {
+      http_response_code(401);
+      echo json_encode(['success' => false, 'message' => 'Acceso denegado']);
+      return false;
+    }
+
+    return true;
+  }
+
   public function list()
   {
     $products = $this->model->getAll();
@@ -20,75 +43,116 @@ class ProductController
 
   public function getById()
   {
-    // Obtener el ID de la URL
-    $id = $_GET['id'] ?? null;
+    // Obtener el ID del producto de la URL
+    $productId = $_GET['productId'] ?? null;
 
-    if (!$id || !is_numeric($id)) {
+    if (!$productId || !is_numeric($productId)) {
+      http_response_code(400);
       echo json_encode(['success' => false, 'message' => 'ID inválido']);
       return;
     }
 
     // Consultar el producto desde el modelo
-    $product = $this->model->getById($id);
+    $product = $this->model->getById($productId);
 
     if ($product) {
+      http_response_code(200);
       echo json_encode(['success' => true, 'product' => $product]);
     } else {
+      http_response_code(500);
       echo json_encode(['success' => false, 'message' => 'Producto no encontrado']);
     }
   }
 
   public function create()
   {
-    // Validar JWT
-    $headers = getallheaders();
-    $token = $headers['Authorization'] ?? '';
-
-    if (!$token || !$userData = verifyJWT(str_replace('Bearer ', '', $token))) {
-      echo json_encode(['success' => false, 'message' => 'No autorizado']);
+    if (!$this->validateJWTAndRole()) {
       return;
     }
 
-    // Verificar rol
-    if ($userData['role'] !== 'admin') {
-      echo json_encode(['success' => false, 'message' => 'Acceso denegado']);
+    $data = json_decode(file_get_contents('php://input'), true);    
+    $name = $data['name'] ?? null;
+    $description = $data['description'] ?? null;
+    $price = $data['price'] ?? null;
+    $stock = $data['stock'] ?? null;
+
+    if (
+      !$name || !$description || !$price || !$stock
+    ) {
+      http_response_code(400);
+      echo json_encode(["success" => false, "message" => 'Datos invalidos o faltantes']);
       return;
     }
 
-    // Procesar creación de producto
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
+    $result = $this->model->create($name, $description, $price, $stock);
 
-    if ($this->model->create($name, $description, $price, $stock)) {
+    if ($result) {
+      http_response_code(200);
       echo json_encode(['success' => true, 'message' => 'Producto creado']);
     } else {
+      http_response_code(500);
       echo json_encode(['success' => false, 'message' => 'Error al crear producto']);
     }
   }
 
   public function update()
   {
-    $id = $_POST['id'];
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $stock = $_POST['stock'];
+    if (!$this->validateJWTAndRole()) {
+      return;
+    }
 
-    if ($this->model->update($id, $name, $description, $price, $stock)) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (empty($data)) {
+      http_response_code(400);
+      echo json_encode(["success" => false, "message" => 'Datos inválidos o faltantes']);
+      return;
+    }
+    $productId = $data['productId'] ?? null;
+    $name = $data['name'] ?? null;
+    $description = $data['description'] ?? null;
+    $price = $data['price'] ?? null;
+    $stock = $data['stock'] ?? null;
+
+    if (
+      !$productId || !is_numeric($productId) || empty($name) || empty($description) || empty($price) || empty($stock)
+    ) {
+      http_response_code(400);
+      echo json_encode(["success" => false, "message" => 'Datos invalidos o faltantes']);
+      return;
+    }
+
+    $result = $this->model->update($productId, $name, $description, $price, $stock);
+
+    if ($result) {
+      http_response_code(200);
       echo json_encode(['success' => true, 'message' => 'producto actualizado correctamente']);
     } else {
+      http_response_code(500);
       echo json_encode(['success' => false, 'message' => 'error al actualizar producto']);
     }
   }
 
   public function delete()
   {
-    $id = $_POST['id'];
-    if ($this->model->delete($id)) {
+    if (!$this->validateJWTAndRole()) {
+      return;
+    }
+    $data = json_decode(file_get_contents('php://input'), true);
+    $productId = $data['productId'] ?? null;
+
+    if (!$productId || !is_numeric($productId)) {
+      http_response_code(400);
+      echo json_encode(['success' => false, 'message' => 'ID inválido o faltante']);
+      return;
+    }
+
+    $result = $this->model->delete($productId);
+
+    if ($result) {
+      http_response_code(200);
       echo json_encode(['success' => true, 'message' => 'producto eliminado correctamente']);
     } else {
+      http_response_code(500);
       echo json_encode(['success' => false, 'message' => 'error al eliminar el producto']);
     }
   }
@@ -114,6 +178,7 @@ switch ($action) {
     $controller->delete();
     break;
   default:
+    http_response_code(404);
     echo json_encode([
       'success' => false,
       'message' => 'Acción no válida'
