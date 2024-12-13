@@ -33,11 +33,11 @@ session_start();
     </div>
   </header>
 
-  <main class="px-4 py-6 h-screen">
+  <main class="px-12 py-6">
     <div id="productDetail"></div>
     <Section>
       <h2 class="text-center text-2xl font-bold uppercase">Reviews</h2>
-      <div id="reviews" class="grid grid-cols-4 gap-4 my-16"></div>
+      <div id="reviews" class="grid grid-cols-4 gap-4 my-16 px-12 place-self-center"></div>
     </Section>
     <section class="w-1/2 mx-auto bg-gray-100 px-12 py-12 rounded-md">
       <?php if (isset($_SESSION['user_id'])): ?>
@@ -64,7 +64,7 @@ session_start();
     </section>
   </main>
 
-  <footer class="flex justify-center items-center py-8 mt-32">
+  <footer class="flex justify-center items-center py-8">
     <div>
       <span class="text-xl">
         ❮❯ by <a href="https://github.com/XINAD919/">Daniel Castaño </a>
@@ -88,7 +88,7 @@ session_start();
               <h1 class='text-black uppercase text-2xl'>${product.name}</h1>
                     <p class='text-black'>${product.description}</p>
                     <p class='text-red-400 text-xl font-bold'>Precio: $${product.price}</p>
-                <button onclick="addToCart(${product.id})">Añadir al carrito</button>
+                <button class='rounded-md px-4 py-2 bg-green-500 hover:bg-green-600 text-white' onclick="addToCart(${product.id})"> <i class="fa-solid fa-cart-shopping"></i> Añadir al carrito</button>
             `;
       })
       .catch(error => console.error('Error:', error));
