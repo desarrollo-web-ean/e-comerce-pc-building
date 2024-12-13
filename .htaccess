@@ -77,3 +77,11 @@ RewriteRule ^api/categories/update$ php/controllers/CategoryController.php?actio
 
 # Endpoint para eliminar una categoria (requiere DELETE)
 RewriteRule ^api/categories/delete$ php/controllers/CategoryController.php?action=delete [QSA,L]
+
+RewriteRule ^login$ php/views/users/login.php [QSA,L]
+RewriteRule ^register$ php/views/users/register.php [QSA,L]
+RewriteRule ^logout$ php/views/users/logout.php [QSA,L]
+RewriteRule ^products$ php/views/products/index.php [QSA,L]
+RewriteRule ^product/([0-9]+)$ php/views/products/product.php?id=$1 [QSA,L]
+RewriteRule ^cart$ php/views/cart.php [QSA,L]
+

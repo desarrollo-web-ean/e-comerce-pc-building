@@ -77,6 +77,7 @@ class UserController
     $user = $this->model->login($email, $password);
 
     if ($user) {
+      session_start();
       $payload = [
         'iss' => 'armatucomputadora',
         'iat' => time(),
@@ -91,6 +92,8 @@ class UserController
       ];
 
       $jwt = JWT::encode($payload, JWT_SECRET_KEY, 'HS256');
+      $_SESSION['user_role'] = $user['role'];
+      $_SESSION['user_id'] = $user['id'];
 
       http_response_code(200);
       echo json_encode(['success' => true, 'message' => 'inicio de sesion exitoso', 'token' => $jwt]);
