@@ -84,4 +84,5 @@ RewriteRule ^logout$ php/views/users/logout.php [QSA,L]
 RewriteRule ^products$ php/views/products/index.php [QSA,L]
 RewriteRule ^product/([0-9]+)$ php/views/products/product.php?id=$1 [QSA,L]
 RewriteRule ^cart$ php/views/cart.php [QSA,L]
+RewriteRule ^converter$ converter.php [QSA,L]
 
